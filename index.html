@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Estoque</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#" id="menu-dashboard" class="active">Dashboard</a></li>
+                <li><a href="#" id="menu-produtos">Produtos</a></li>
+                <li><a href="#" id="menu-vendas">Vendas</a></li>
+                <li><a href="#" id="menu-compras">Compras</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Seção Dashboard -->
+        <div id="dashboard-section">
+            <h1>Dashboard</h1>
+            <div id="dashboard-grid" class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h2>Total Investido</h2>
+                    <p id="total-investido">Calculando...</p>
+                    <span>Custo total dos produtos em estoque</span>
+                </div>
+                <div class="dashboard-card">
+                    <h2>Lucro Potencial Total</h2>
+                    <p id="lucro-potencial">Calculando...</p>
+                    <span>Lucro total se todo o estoque for vendido</span>
+                </div>
+                <div class="dashboard-card">
+                    <h2>Valor de Venda Total</h2>
+                    <p id="valor-venda-total">Calculando...</p>
+                    <span>Valor total de venda do estoque atual</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Produtos -->
+        <div id="produtos-section" class="hidden">
+            <div class="produtos-header">
+                <h1>Lista de Produtos</h1>
+                <input type="text" id="produtos-busca-input" placeholder="Buscar por código ou descrição...">
+            </div>
+            <div id="produtos-grid"></div>
+        </div>
+
+        <!-- Seção de Vendas -->
+        <div id="vendas-section" class="hidden">
+            <h1>Registrar Nova Venda</h1>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="venda-busca-codigo">Código do Produto:</label>
+                    <div class="search-container">
+                        <input type="text" id="venda-busca-codigo" placeholder="Digite o código...">
+                        <button id="venda-busca-btn" class="cta-button">Buscar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="venda-produto-display" class="hidden">
+                <hr>
+                <h3>Produto Encontrado</h3>
+                <div id="venda-produto-detalhes"></div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="venda-quantidade">Quantidade a Vender:</label>
+                        <input type="number" id="venda-quantidade" min="1" value="1">
+                    </div>
+                </div>
+                <button id="venda-confirmar-btn" class="cta-button">Confirmar Venda</button>
+            </div>
+            <div id="venda-feedback" class="feedback-message"></div>
+        </div>
+
+        <!-- Seção de Compras -->
+        <div id="compras-section" class="hidden">
+            <h1>Adicionar Novo Produto</h1>
+            <form id="form-add-produto">
+                <fieldset class="fieldset-highlight">
+                    <legend>Margens de Lucro (%)</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="margemLucro">Margem Padrão:</label><input type="number" id="margemLucro" name="margemLucro" step="1" value="100"></div>
+                        <div class="form-group"><label for="margemMinimo">Margem Mínima:</label><input type="number" id="margemMinimo" name="margemMinimo" step="1" value="80"></div>
+                        <div class="form-group"><label for="margemMaximo">Margem Máxima:</label><input type="number" id="margemMaximo" name="margemMaximo" step="1" value="120"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Dados Básicos</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="codigo">Código:</label><input type="text" id="codigo" name="codigo" readonly></div>
+                        <div class="form-group"><label for="descricao">Descrição:</label><input type="text" id="descricao" name="descricao" required></div>
+                        <div class="form-group"><label for="categoria">Categoria:</label><input type="text" id="categoria" name="categoria"></div>
+                        <div class="form-group"><label for="material">Material:</label><input type="text" id="material" name="material"></div>
+                        <div class="form-group"><label for="ativo">Status:</label><select id="ativo" name="ativo"><option value="Sim">Ativo</option><option value="Não">Inativo</option></select></div>
+                        <div class="form-group"><label for="dataCompra">Data Compra:</label><input type="date" id="dataCompra" name="dataCompra"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Valores e Precificação</legend>
+                    <div class="form-grid-pricing">
+                        <div class="form-group"><label for="precoCusto">Custo(R$):</label><input type="number" id="precoCusto" name="precoCusto" step="0.01" value="0" required></div>
+                        <div class="form-group"><label for="despesa">Despesa(R$):</label><input type="number" id="despesa" name="despesa" step="0.01" value="0"></div>
+                        <div class="form-group"><label for="custoFinal">Custo Final(R$):</label><input type="number" id="custoFinal" name="custoFinal" readonly></div>
+                        <div class="form-group"><label for="lucro">Lucro(R$):</label><input type="number" id="lucro" name="lucro" readonly></div>
+                        <div class="form-group"><label for="precoVenda">Venda(R$):</label><input type="number" id="precoVenda" name="precoVenda" readonly></div>
+                        <div class="form-group"><label for="precoMinimo">Mínimo(R$):</label><input type="number" id="precoMinimo" name="precoMinimo" readonly></div>
+                        <div class="form-group"><label for="precoMaximo">Máximo(R$):</label><input type="number" id="precoMaximo" name="precoMaximo" readonly></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Estoque e Fornecedor</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="estoque">Estoque Inicial:</label><input type="number" id="estoque" name="estoque" value="1" required></div>
+                        <div class="form-group"><label for="estoqueMinimo">Mínimo:</label><input type="number" id="estoqueMinimo" name="estoqueMinimo" value="1"></div>
+                        <div class="form-group"><label for="estoqueMaximo">Máximo:</label><input type="number" id="estoqueMaximo" name="estoqueMaximo" value="5"></div>
+                        <div class="form-group"><label for="fornecedor">Fornecedor:</label><input type="text" id="fornecedor" name="fornecedor"></div>
+                        <div class="form-group"><label for="site">Site:</label><input type="text" id="site" name="site"></div>
+                        <div class="form-group"><label for="linkProduto">Link Produto:</label><input type="text" id="linkProduto" name="linkProduto"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Mídias</legend>
+                     <div class="form-grid">
+                        <div class="form-group"><label for="imagem1">URL Imagem 1:</label><input type="text" id="imagem1" name="imagem1"></div>
+                        <div class="form-group"><label for="imagem2">URL Imagem 2:</label><input type="text" id="imagem2" name="imagem2"></div>
+                        <div class="form-group"><label for="imagem3">URL Imagem 3:</label><input type="text" id="imagem3" name="imagem3"></div>
+                        <div class="form-group"><label for="video1">URL Vídeo:</label><input type="text" id="video1" name="video1"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Notas e Descrições</legend>
+                    <div class="form-group"><label for="descricaoItem">Descrição Detalhada:</label><textarea id="descricaoItem" name="descricaoItem"></textarea></div>
+                    <div class="form-group"><label for="observacaoInterna">Obs. Interna:</label><textarea id="observacaoInterna" name="observacaoInterna"></textarea></div>
+                </fieldset>
+                <button type="submit" class="cta-button">Adicionar Produto</button>
+                <div id="compras-feedback" class="feedback-message"></div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Modal para Edição de Produto -->
+    <div id="edit-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Editar Produto</h2>
+            <form id="form-edit-produto">
+                 <input type="hidden" id="edit-linha" name="linha">
+                <fieldset class="fieldset-highlight">
+                    <legend>Margens de Lucro (%)</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="edit-margemLucro">Margem Padrão:</label><input type="number" id="edit-margemLucro" name="margemLucro" step="1"></div>
+                        <div class="form-group"><label for="edit-margemMinimo">Margem Mínima:</label><input type="number" id="edit-margemMinimo" name="margemMinimo" step="1"></div>
+                        <div class="form-group"><label for="edit-margemMaximo">Margem Máxima:</label><input type="number" id="edit-margemMaximo" name="margemMaximo" step="1"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Dados Básicos</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="edit-codigo">Código:</label><input type="text" id="edit-codigo" name="codigo" readonly></div>
+                        <div class="form-group"><label for="edit-descricao">Descrição:</label><input type="text" id="edit-descricao" name="descricao" required></div>
+                        <div class="form-group"><label for="edit-categoria">Categoria:</label><input type="text" id="edit-categoria" name="categoria"></div>
+                        <div class="form-group"><label for="edit-material">Material:</label><input type="text" id="edit-material" name="material"></div>
+                        <div class="form-group"><label for="edit-ativo">Status:</label><select id="edit-ativo" name="ativo"><option value="Sim">Ativo</option><option value="Não">Inativo</option></select></div>
+                        <div class="form-group"><label for="edit-dataCompra">Data Compra:</label><input type="date" id="edit-dataCompra" name="dataCompra"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Valores e Precificação</legend>
+                    <div class="form-grid-pricing">
+                        <div class="form-group"><label for="edit-precoCusto">Custo(R$):</label><input type="number" id="edit-precoCusto" name="precoCusto" step="0.01" required></div>
+                        <div class="form-group"><label for="edit-despesa">Despesa(R$):</label><input type="number" id="edit-despesa" name="despesa" step="0.01"></div>
+                        <div class="form-group"><label for="edit-custoFinal">Custo Final(R$):</label><input type="number" id="edit-custoFinal" name="custoFinal" readonly></div>
+                        <div class="form-group"><label for="edit-lucro">Lucro(R$):</label><input type="number" id="edit-lucro" name="lucro" readonly></div>
+                        <div class="form-group"><label for="edit-precoVenda">Venda(R$):</label><input type="number" id="edit-precoVenda" name="precoVenda" readonly></div>
+                        <div class="form-group"><label for="edit-precoMinimo">Mínimo(R$):</label><input type="number" id="edit-precoMinimo" name="precoMinimo" readonly></div>
+                        <div class="form-group"><label for="edit-precoMaximo">Máximo(R$):</label><input type="number" id="edit-precoMaximo" name="precoMaximo" readonly></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Estoque e Fornecedor</legend>
+                    <div class="form-grid">
+                        <div class="form-group"><label for="edit-estoque">Estoque:</label><input type="number" id="edit-estoque" name="estoque" required></div>
+                        <div class="form-group"><label for="edit-estoqueMinimo">Mínimo:</label><input type="number" id="edit-estoqueMinimo" name="estoqueMinimo"></div>
+                        <div class="form-group"><label for="edit-estoqueMaximo">Máximo:</label><input type="number" id="edit-estoqueMaximo" name="estoqueMaximo"></div>
+                        <div class="form-group"><label for="edit-fornecedor">Fornecedor:</label><input type="text" id="edit-fornecedor" name="fornecedor"></div>
+                        <div class="form-group"><label for="edit-site">Site:</label><input type="text" id="edit-site" name="site"></div>
+                        <div class="form-group"><label for="edit-linkProduto">Link Produto:</label><input type="text" id="edit-linkProduto" name="linkProduto"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Mídias</legend>
+                     <div class="form-grid">
+                        <div class="form-group"><label for="edit-imagem1">URL Imagem 1:</label><input type="text" id="edit-imagem1" name="imagem1"></div>
+                        <div class="form-group"><label for="edit-imagem2">URL Imagem 2:</label><input type="text" id="edit-imagem2" name="imagem2"></div>
+                        <div class="form-group"><label for="edit-imagem3">URL Imagem 3:</label><input type="text" id="edit-imagem3" name="imagem3"></div>
+                        <div class="form-group"><label for="edit-video1">URL Vídeo:</label><input type="text" id="edit-video1" name="video1"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Notas e Descrições</legend>
+                    <div class="form-group"><label for="edit-descricaoItem">Descrição Detalhada:</label><textarea id="edit-descricaoItem" name="descricaoItem"></textarea></div>
+                    <div class="form-group"><label for="edit-observacaoInterna">Obs. Interna:</label><textarea id="edit-observacaoInterna" name="observacaoInterna"></textarea></div>
+                </fieldset>
+                <button type="submit" class="cta-button">Salvar Alterações</button>
+                <div id="edit-feedback" class="feedback-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/compras.js"></script>
+    <script src="js/produtos.js"></script>
+    <script src="js/vendas.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
