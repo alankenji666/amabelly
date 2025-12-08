@@ -50,31 +50,31 @@
             <div id="produtos-grid"></div>
         </div>
 
-        <!-- Seção de Vendas -->
+        <!-- Seção de Vendas (Nova Estrutura) -->
         <div id="vendas-section" class="hidden">
-            <h1>Registrar Nova Venda</h1>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="venda-busca-codigo">Código do Produto:</label>
-                    <div class="search-container">
-                        <input type="text" id="venda-busca-codigo" placeholder="Digite o código...">
-                        <button id="venda-busca-btn" class="cta-button">Buscar</button>
-                    </div>
-                </div>
-            </div>
-            <div id="venda-produto-display" class="hidden">
-                <hr>
-                <h3>Produto Encontrado</h3>
-                <div id="venda-produto-detalhes"></div>
-                <div class="form-grid">
+            <h1>Nova Venda</h1>
+            <div class="vendas-layout">
+                <!-- Coluna da Esquerda: Busca -->
+                <div class="vendas-busca-coluna">
                     <div class="form-group">
-                        <label for="venda-quantidade">Quantidade a Vender:</label>
-                        <input type="number" id="venda-quantidade" min="1" value="1">
+                        <label for="venda-produto-busca">Buscar Produto</label>
+                        <input type="text" id="venda-produto-busca" placeholder="Digite código ou descrição...">
                     </div>
+                    <div id="venda-resultados-busca"></div>
+                    <div id="venda-paginacao"></div>
                 </div>
-                <button id="venda-confirmar-btn" class="cta-button">Confirmar Venda</button>
+
+                <!-- Coluna da Direita: Sacola -->
+                <div class="vendas-sacola-coluna">
+                    <h2>Sacola de Vendas</h2>
+                    <div id="vendas-sacola-lista"></div>
+                    <div class="vendas-sacola-summary">
+                        <p>Total: <strong id="vendas-sacola-total">R$ 0,00</strong></p>
+                        <button id="finalizar-venda-btn" class="cta-button">Finalizar Venda</button>
+                    </div>
+                    <div id="venda-feedback" class="feedback-message"></div>
+                </div>
             </div>
-            <div id="venda-feedback" class="feedback-message"></div>
         </div>
 
         <!-- Seção de Compras -->
@@ -211,6 +211,65 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal para Visualização de Produto -->
+    <div id="view-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Detalhes do Produto</h2>
+            <div class="view-grid">
+                <div class="view-group">
+                    <img id="view-imagem1-display" src="" alt="Imagem do Produto" class="view-main-image">
+                    <div id="view-image-placeholder" class="hidden">Sem Imagem</div>
+                </div>
+                <div class="view-details">
+                    <fieldset>
+                        <legend>Dados Básicos</legend>
+                        <p><strong>Código:</strong> <span id="view-codigo"></span></p>
+                        <p><strong>Descrição:</strong> <span id="view-descricao"></span></p>
+                        <p><strong>Categoria:</strong> <span id="view-categoria"></span></p>
+                        <p><strong>Material:</strong> <span id="view-material"></span></p>
+                        <p><strong>Status:</strong> <span id="view-ativo"></span></p>
+                        <p><strong>Data da Compra:</strong> <span id="view-dataCompra"></span></p>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Estoque e Fornecedor</legend>
+                        <p><strong>Estoque Atual:</strong> <span id="view-estoque"></span></p>
+                        <p><strong>Estoque Mínimo:</strong> <span id="view-estoqueMinimo"></span></p>
+                        <p><strong>Estoque Máximo:</strong> <span id="view-estoqueMaximo"></span></p>
+                        <p><strong>Fornecedor:</strong> <span id="view-fornecedor"></span></p>
+                        <p><strong>Site:</strong> <span id="view-site"></span></p>
+                        <p><strong>Link do Produto:</strong> <a id="view-linkProduto-link" href="#" target="_blank"></a></p>
+                    </fieldset>
+                </div>
+                 <div class="view-pricing-full-width">
+                    <fieldset>
+                        <legend>Valores e Precificação</legend>
+                         <div class="form-grid-pricing">
+                            <div class="form-group"><p><strong>Custo(R$):</strong> <span id="view-precoCusto"></span></p></div>
+                            <div class="form-group"><p><strong>Despesa(R$):</strong> <span id="view-despesa"></span></p></div>
+                            <div class="form-group"><p><strong>Custo Final(R$):</strong> <span id="view-custoFinal"></span></p></div>
+                            <div class="form-group"><p><strong>Lucro(R$):</strong> <span id="view-lucro"></span></p></div>
+                            <div class="form-group"><p><strong>Venda(R$):</strong> <span id="view-precoVenda"></span></p></div>
+                            <div class="form-group"><p><strong>Mínimo(R$):</strong> <span id="view-precoMinimo"></span></p></div>
+                             <div class="form-group"><p><strong>Máximo(R$):</strong> <span id="view-precoMaximo"></span></p></div>
+                        </div>
+                    </fieldset>
+                </div>
+                 <div class="view-notes-full-width">
+                    <fieldset>
+                        <legend>Notas e Descrições</legend>
+                        <p><strong>Descrição Detalhada:</strong></p>
+                        <p id="view-descricaoItem"></p>
+                        <hr>
+                        <p><strong>Observação Interna:</strong></p>
+                        <p id="view-observacaoInterna"></p>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="js/main.js"></script>
     <script src="js/compras.js"></script>

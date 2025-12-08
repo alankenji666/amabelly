@@ -72,9 +72,8 @@ fieldset {
     padding: 1.5rem;
 }
 
-/* Highlighted Fieldset */
 .fieldset-highlight {
-    background-color: #eef7ff; /* Light blue background */
+    background-color: #eef7ff;
     border-color: #007bff;
 }
 
@@ -113,7 +112,7 @@ legend {
     padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; /* Important for padding */
+    box-sizing: border-box;
 }
 
 .form-group input:read-only {
@@ -125,6 +124,25 @@ legend {
     min-height: 80px;
     resize: vertical;
 }
+
+/* --- Input Field Highlights --- */
+#descricao, #precoCusto, #estoque, #linkProduto,
+#edit-descricao, #edit-precoCusto, #edit-estoque, #edit-linkProduto {
+    background-color: #e6f7ff; /* Light Blue */
+    border-color: #91d5ff;
+}
+
+#despesa, #edit-despesa {
+    background-color: #fff1f0; /* Light Red */
+    border-color: #ffa39e;
+}
+
+#lucro, #edit-lucro {
+    background-color: #f6ffed; /* Light Green */
+    border-color: #b7eb8f;
+}
+/* --- End Input Field Highlights --- */
+
 
 /* Buttons */
 .cta-button {
@@ -176,23 +194,152 @@ legend {
     padding: 1.5rem;
     border: 1px solid #e9ecef;
     border-radius: 6px;
+    display: flex;
+    flex-direction: column;
 }
 
+/* --- Zoom on Hover Effect --- */
+.product-image-container {
+    height: 200px;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    background-color: #e9ecef;
+}
+
+.product-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease-in-out;
+}
+
+.product-image-container:hover .product-card-image {
+    transform: scale(1.1);
+}
+/* --- End Zoom Effect --- */
+
 .product-actions {
-    margin-top: 1rem;
+    margin-top: auto;
     display: flex;
     gap: 0.5rem;
 }
 
-.edit-button, .delete-button {
+.view-button, .edit-button, .delete-button {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    color: white;
 }
 
-.edit-button { background-color: #ffc107; }
-.delete-button { background-color: #dc3545; color: white; }
+.view-button { background-color: #17a2b8; }
+.edit-button { background-color: #ffc107; color: #212529;}
+.delete-button { background-color: #dc3545; }
+
+/* --- Vendas Section --- */
+.vendas-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+#venda-resultados-busca {
+    margin-top: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.venda-search-placeholder {
+    padding: 2rem;
+    text-align: center;
+    color: #888;
+    grid-column: 1 / -1; /* Span across all grid columns */
+}
+
+.venda-resultado-card {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 0.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.venda-resultado-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.venda-resultado-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+}
+
+.venda-resultado-card .desc {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    height: 40px;
+    overflow: hidden;
+}
+
+.venda-resultado-card .price {
+    font-weight: bold;
+    color: #333;
+}
+
+.vendas-sacola-coluna {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+#vendas-sacola-lista .sacola-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.sacola-item-descricao {
+    font-weight: 500;
+}
+
+.sacola-item-quantidade input {
+    width: 60px;
+    text-align: center;
+}
+
+.sacola-item-remover {
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border: none;
+    background: none;
+}
+
+.vendas-sacola-summary {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+.vendas-sacola-summary p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
 
 /* Modal */
 .modal {
@@ -212,7 +359,7 @@ legend {
     padding: 2rem;
     border-radius: 8px;
     max-width: 80%;
-    width: 1000px; /* Adjust as needed */
+    width: 1000px;
 }
 
 .close-button {
@@ -220,4 +367,193 @@ legend {
     font-size: 1.5rem;
     font-weight: bold;
     cursor: pointer;
+}
+
+/* View Modal Specific Styles */
+.view-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.view-main-image {
+    width: 100%;
+    height: auto;
+    max-height: 350px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.view-details p, .view-pricing-full-width p, .view-notes-full-width p {
+    margin: 0.5rem 0;
+}
+
+.view-details p strong, .view-pricing-full-width p strong, .view-notes-full-width p strong {
+    color: #333;
+}
+
+.view-details span, .view-pricing-full-width span, .view-notes-full-width p#view-descricaoItem, .view-notes-full-width p#view-observacaoInterna {
+    color: #555;
+}
+
+.view-pricing-full-width, .view-notes-full-width {
+    grid-column: 1 / -1;
+}
+
+#view-linkProduto-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+#view-linkProduto-link:hover {
+    text-decoration: underline;
+}
+
+/* Placeholder for missing images */
+.product-card-image-placeholder,
+#view-image-placeholder {
+    background-color: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
+.product-card-image-placeholder {
+    height: 100%;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+#view-image-placeholder {
+    width: 100%;
+    height: 350px;
+}
+
+.venda-image-placeholder {
+    width: 100%;
+    height: 100px; /* Same height as the img */
+    background-color: #f0f0f0; /* Same background */
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+    border-radius: 4px; /* Same border-radius */
+}
+
+
+/* --- Responsive Design for Mobile --- */
+@media (max-width: 768px) {
+    /* Adjust header and navigation for smaller screens */
+    header {
+        padding: 1rem;
+    }
+
+    header nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    header nav a {
+        padding: 0.5rem;
+        border-bottom: none;
+    }
+
+    /* Reduce padding on main content */
+    main {
+        padding: 1rem;
+    }
+
+    #dashboard-section, #produtos-section, #vendas-section, #compras-section {
+        padding: 1rem;
+    }
+
+    /* Stack form grids to a single column */
+    .form-grid, .form-grid-pricing, .vendas-layout {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust product search header */
+    .produtos-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    #produtos-busca-input {
+        width: 100%;
+    }
+
+    /* Adjust product grid to a single column */
+    #produtos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Make venda search results 2 columns on mobile for better browsing */
+    #venda-resultados-busca {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        max-height: 400px;
+    }
+
+    /* Adjust modal content for smaller screens */
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 1.5rem;
+    }
+
+    /* Stack the view modal grid */
+    .view-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .view-main-image {
+        max-height: 300px;
+    }
+}
+/* --- End Responsive Design --- */
+
+/* --- Vendas Pagination (Safely Added) --- */
+#venda-paginacao {
+    margin-top: 1rem; /* Space above pagination */
+    padding-top: 1rem; /* Space below the search results */
+    border-top: 1px solid #ddd; /* Separator line */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+#venda-paginacao button {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #007bff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#venda-paginacao button:hover {
+    background-color: #e9ecef;
+}
+
+#venda-paginacao button:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#venda-paginacao span {
+    font-weight: 500;
+    color: #555;
 }

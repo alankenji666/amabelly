@@ -6,37 +6,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const codigoInput = document.getElementById('codigo');
     const dataCompraInput = document.getElementById('dataCompra');
 
-    async function setNextProductCode() {
-        if (!codigoInput) return;
-        codigoInput.value = 'Gerando...';
-        try {
-            const response = await fetch('https://project-445845663010.southamerica-east1.run.app/produtos');
-            if (!response.ok) throw new Error('API indisponível para gerar código.');
-            
-            const produtos = await response.json();
-            let nextCode = 'A100001'; // Default for the very first product
+    // Define o campo de código como "Automático" e desabilita a edição.
+    if (codigoInput) {
+        codigoInput.value = 'Automático';
+        codigoInput.setAttribute('readonly', true);
+    }
 
-            if (produtos && produtos.length > 0) {
-                const relevantCodes = produtos
-                    .map(p => p.codigo)
-                    .filter(c => c && c.match(/^A\d+$/i));
+    // Função para capitalizar a primeira letra de cada palavra.
+    function toTitleCase(str) {
+        if (!str) return '';
+        return str.toLowerCase().split(' ').map(word => {
+            // Não capitaliza palavras pequenas, exceto se forem a primeira.
+            if (['de', 'da', 'do', 'dos', 'e', 'em', 'para'].includes(word) && word !== str.toLowerCase().split(' ')[0]) {
+                return word;
+            }
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        }).join(' ');
+    }
 
-                if (relevantCodes.length > 0) {
-                    const maxNumber = relevantCodes.reduce((max, code) => {
-                        const numberPart = parseInt(code.substring(1), 10);
-                        return numberPart > max ? numberPart : max;
-                    }, 0);
-                    nextCode = `A${maxNumber + 1}`;
-                }
-            }
-            codigoInput.value = nextCode;
-        } catch (error) {
-            console.error("Erro ao gerar código do produto:", error);
-            codigoInput.value = 'Erro ao gerar';
-            if (feedbackDiv) {
-                feedbackDiv.textContent = `❌ ${error.message}`;
-                feedbackDiv.style.color = 'red';
-            }
+    // Adiciona o formatador de texto ao campo de descrição.
+    function setupAutoCapitalize() {
+        const descricaoInput = document.getElementById('descricao');
+        if (descricaoInput) {
+            descricaoInput.addEventListener('blur', () => {
+                descricaoInput.value = toTitleCase(descricaoInput.value.trim());
+            });
         }
     }
 
@@ -48,15 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!linkProdutoInput || !siteInput || !fornecedorInput) return;
 
         linkProdutoInput.addEventListener('input', () => {
-            setTimeout(() => { // Use um pequeno delay para o valor ser colado
+            setTimeout(() => {
                 try {
                     const url = new URL(linkProdutoInput.value);
                     siteInput.value = url.origin;
-                    
                     const hostnameParts = url.hostname.replace('www.', '').split('.');
                     fornecedorInput.value = hostnameParts[0];
                 } catch (error) {
-                    // Ignora erros de URL inválida para permitir digitação manual
+                    // Ignora erros
                 }
             }, 100);
         });
@@ -113,13 +106,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(formAddProduto);
         const data = Object.fromEntries(formData.entries());
 
-        // Assegurando que valores calculados sejam enviados
+        delete data.codigo;
+
         data.precoVenda = document.getElementById('precoVenda').value;
         data.precoMinimo = document.getElementById('precoMinimo').value;
         data.precoMaximo = document.getElementById('precoMaximo').value;
         data.lucro = document.getElementById('lucro').value;
 
-        // Formata as margens para enviar com "%"
         data.margemLucro = `${data.margemLucro}%`;
         data.margemMinimo = `${data.margemMinimo}%`;
         data.margemMaximo = `${data.margemMaximo}%`;
@@ -134,11 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             if (!response.ok) throw new Error(result.message || 'Falha ao adicionar o produto.');
 
-            feedbackDiv.textContent = '✅ Produto adicionado com sucesso!';
+            feedbackDiv.textContent = `✅ Produto adicionado com sucesso! Código gerado: ${result.codigoGerado}`;
             feedbackDiv.style.color = 'green';
             formAddProduto.reset();
             
-            await setNextProductCode();
+            if (codigoInput) codigoInput.value = 'Automático';
             if(dataCompraInput) dataCompraInput.value = new Date().toISOString().split('T')[0];
             setupPriceCalculators();
 
@@ -150,6 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicialização da página de Compras
     setupPriceCalculators();
-    setNextProductCode();
     setupLinkProdutoParser();
+    setupAutoCapitalize();
 });

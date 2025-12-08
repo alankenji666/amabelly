@@ -2,10 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const produtosGrid = document.getElementById('produtos-grid');
     const buscaInput = document.getElementById('produtos-busca-input');
     const menuProdutos = document.getElementById('menu-produtos');
+
+    // Modal de Edição
     const editModal = document.getElementById('edit-modal');
     const formEditProduto = document.getElementById('form-edit-produto');
     const editFeedback = document.getElementById('edit-feedback');
-    const closeButton = editModal.querySelector('.close-button');
+    const closeEditButton = editModal.querySelector('.close-button');
+
+    // Modal de Visualização
+    const viewModal = document.getElementById('view-modal');
+    const closeViewButton = viewModal ? viewModal.querySelector('.close-button') : null;
+
     let produtosCache = [];
 
     async function fetchAndRenderProdutos() {
@@ -22,29 +29,72 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProdutos(produtos) {
         if (!produtosGrid || !buscaInput) return;
         const searchTerm = buscaInput.value.toLowerCase();
-        const produtosFiltrados = produtos.filter(p => 
-            p.codigo.toLowerCase().includes(searchTerm) || 
-            p.descricao.toLowerCase().includes(searchTerm)
+        const produtosFiltrados = produtos.filter(p =>
+            (p.codigo && p.codigo.toLowerCase().includes(searchTerm)) ||
+            (p.descricao && p.descricao.toLowerCase().includes(searchTerm))
         );
 
         produtosGrid.innerHTML = '';
         produtosFiltrados.forEach(produto => {
             const card = document.createElement('div');
             card.className = 'product-card';
+
+            const imageHtml = produto.imagem1
+                ? `<img src="${produto.imagem1}" alt="${produto.descricao}" class="product-card-image">`
+                : `<div class="product-card-image-placeholder">Sem Imagem</div>`;
+
             card.innerHTML = `
-                <img src="${produto.imagem1 || ''}" alt="${produto.descricao}" class="product-card-image">
+                <div class="product-image-container">
+                    ${imageHtml}
+                </div>
                 <h3>${produto.descricao} (${produto.codigo})</h3>
                 <p><strong>Preço Venda:</strong> R$ ${parseFloat(produto.precoVenda || 0).toFixed(2)}</p>
                 <p><strong>Estoque:</strong> ${produto.estoque || 0}</p>
                 <div class="product-actions">
+                    <button class="view-button">Visualizar</button>
                     <button class="edit-button">Editar</button>
                     <button class="delete-button">Excluir</button>
                 </div>
             `;
+            card.querySelector('.view-button').addEventListener('click', () => openViewModal(produto));
             card.querySelector('.edit-button').addEventListener('click', () => openEditModal(produto));
             card.querySelector('.delete-button').addEventListener('click', () => handleDeleteProduct(produto));
             produtosGrid.appendChild(card);
         });
+    }
+
+    function openViewModal(produto) {
+        if (!viewModal) return;
+
+        // Popula campos de texto/número
+        for (const key in produto) {
+            const field = document.getElementById(`view-${key}`);
+            if (field) {
+                let value = produto[key] || 'N/A';
+                field.textContent = value;
+            }
+        }
+
+        // Lógica para exibir imagem ou placeholder
+        const viewImage = document.getElementById('view-imagem1-display');
+        const viewImagePlaceholder = document.getElementById('view-image-placeholder');
+        if (produto.imagem1) {
+            viewImage.src = produto.imagem1;
+            viewImage.alt = produto.descricao;
+            viewImage.classList.remove('hidden');
+            viewImagePlaceholder.classList.add('hidden');
+        } else {
+            viewImage.classList.add('hidden');
+            viewImagePlaceholder.classList.remove('hidden');
+        }
+
+        const viewLinkProduto = document.getElementById('view-linkProduto-link');
+        if(viewLinkProduto) {
+            viewLinkProduto.href = produto.linkProduto || '#';
+            viewLinkProduto.textContent = produto.linkProduto ? 'Link para o produto' : 'N/A';
+        }
+
+        viewModal.classList.remove('hidden');
     }
 
     function setupEditPriceCalculators() {
@@ -125,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         let formattedDate;
                         if (dateParts.length === 3) {
                            formattedDate = `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`;
-                        } else { 
+                        } else {
                            formattedDate = new Date(produto[key]).toISOString().split('T')[0];
                         }
                         field.value = formattedDate;
@@ -137,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        
+
         setupEditPriceCalculators();
         setupEditLinkProdutoParser();
         editModal.classList.remove('hidden');
@@ -155,14 +205,14 @@ document.addEventListener('DOMContentLoaded', () => {
         data.precoMinimo = document.getElementById('edit-precoMinimo').value;
         data.precoMaximo = document.getElementById('edit-precoMaximo').value;
         data.lucro = document.getElementById('edit-lucro').value;
-        
+
         data.margemLucro = `${data.margemLucro}%`;
         data.margemMinimo = `${data.margemMinimo}%`;
         data.margemMaximo = `${data.margemMaximo}%`;
 
         try {
             const response = await fetch('https://project-445845663010.southamerica-east1.run.app/produtos', {
-                method: 'PUT', // Corrigido para PUT, conforme seu exemplo.
+                method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
@@ -172,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             editFeedback.textContent = '✅ Salvo com sucesso!';
             editFeedback.style.color = 'green';
-            
+
             setTimeout(() => {
                 editModal.classList.add('hidden');
                 fetchAndRenderProdutos();
@@ -195,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.message || 'Falha ao excluir.');
-            
+
             alert('Produto excluído com sucesso!');
             fetchAndRenderProdutos();
 
@@ -204,12 +254,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    if (closeButton) closeButton.addEventListener('click', () => editModal.classList.add('hidden'));
+    if (closeEditButton) closeEditButton.addEventListener('click', () => editModal.classList.add('hidden'));
+    if (closeViewButton) closeViewButton.addEventListener('click', () => viewModal.classList.add('hidden'));
     if (buscaInput) buscaInput.addEventListener('input', () => renderProdutos(produtosCache));
     if (menuProdutos) {
         menuProdutos.addEventListener('click', (e) => {
             e.preventDefault();
-            // Lógica para mostrar/esconder seções
             document.getElementById('produtos-section').classList.remove('hidden');
             document.getElementById('dashboard-section').classList.add('hidden');
             document.getElementById('vendas-section').classList.add('hidden');
