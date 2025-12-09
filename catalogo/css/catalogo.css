@@ -1,0 +1,140 @@
+/* css/catalogo.css */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #fdfaf7; /* Um branco levemente rosado/quente */
+    color: #4a4a4a;
+    margin: 0;
+}
+
+header {
+    background-color: #fff;
+    padding: 5rem 2rem; /* Espaçamento para o logo final */
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column; /* Organiza os itens em coluna */
+    justify-content: center; /* Centraliza verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
+    gap: 2rem;
+    text-align: center;
+}
+
+.header-logo {
+    height: 450px; /* Tamanho final do logo */
+    max-width: 90%;
+}
+
+/* Estilos para o link do Instagram que agora contém o SVG */
+.instagram-link {
+    color: #888; /* Define a cor do traço do SVG */
+    transition: color 0.3s;
+}
+
+.instagram-link:hover {
+    color: #d4af37; /* Muda a cor do traço do SVG para dourado no hover */
+}
+
+.instagram-link svg {
+    width: 38px; /* Tamanho do ícone */
+    height: 38px;
+}
+
+main {
+    padding: 2rem;
+}
+
+.catalogo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.catalogo-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.catalogo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.catalogo-card:hover .catalogo-card-image {
+    transform: scale(1.05);
+}
+
+.catalogo-image-container {
+    height: 250px;
+    overflow: hidden;
+    background-color: #f8f9fa; /* Um cinza muito claro para o fundo */
+}
+
+/* Estilo para o placeholder de imagem */
+.image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fdfaf7; /* Mesma cor do corpo da página */
+}
+
+.image-placeholder span {
+    font-size: 1.5rem;
+    font-weight: 300; /* Uma fonte mais leve */
+    color: #d4af37; /* Cor dourada da marca */
+    opacity: 0.8; /* Levemente transparente */
+}
+
+
+.catalogo-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease; /* Adicionada transição suave para o zoom */
+}
+
+.catalogo-card-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.catalogo-card-codigo {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.catalogo-card-descricao {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    flex-grow: 1; /* Garante que a descrição ocupe o espaço disponível */
+}
+
+.catalogo-card-preco {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #d4af37; /* Preço com a cor dourada da marca */
+    text-align: right;
+}
+
+@media (max-width: 600px) {
+    .header-logo {
+        height: 280px; /* Grande, mas proporcional para telas pequenas */
+    }
+
+    main {
+        padding: 1rem;
+    }
+    .catalogo-grid {
+        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+    }
+}

@@ -14,6 +14,7 @@
                 <li><a href="#" id="menu-produtos">Produtos</a></li>
                 <li><a href="#" id="menu-vendas">Vendas</a></li>
                 <li><a href="#" id="menu-compras">Compras</a></li>
+                <li><a href="catalogo.html" target="_blank">Catálogo</a></li>
             </ul>
         </nav>
     </header>
@@ -50,7 +51,7 @@
             <div id="produtos-grid"></div>
         </div>
 
-        <!-- Seção de Vendas (Nova Estrutura) -->
+        <!-- Seção de Vendas (Corrigido) -->
         <div id="vendas-section" class="hidden">
             <h1>Nova Venda</h1>
             <div class="vendas-layout">
@@ -69,7 +70,19 @@
                     <h2>Sacola de Vendas</h2>
                     <div id="vendas-sacola-lista"></div>
                     <div class="vendas-sacola-summary">
-                        <p>Total: <strong id="vendas-sacola-total">R$ 0,00</strong></p>
+                        <div class="summary-item">
+                            <label for="venda-frete">Frete (R$):</label>
+                            <input type="text" inputmode="decimal" id="venda-frete" value="0,00">
+                        </div>
+                        <div class="summary-item">
+                            <label for="venda-desconto">Desconto (R$):</label>
+                            <input type="text" inputmode="decimal" id="venda-desconto" value="0,00">
+                        </div>
+                        <div id="desconto-sugestao-container" class="suggestion-container">
+                            <span id="venda-desconto-maximo" class="suggestion-text"></span>
+                        </div>
+                        <p class="summary-total">Subtotal: <strong id="vendas-sacola-subtotal">R$ 0,00</strong></p>
+                        <p class="summary-total summary-final-total">Total Final: <strong id="vendas-sacola-total-final">R$ 0,00</strong></p>
                         <button id="finalizar-venda-btn" class="cta-button">Finalizar Venda</button>
                     </div>
                     <div id="venda-feedback" class="feedback-message"></div>
