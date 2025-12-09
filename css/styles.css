@@ -20,13 +20,22 @@ header {
     z-index: 1000;
 }
 
-header nav ul {
+/* --- NEW: Flexbox container for nav items --- */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-menu, .user-info {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
     margin: 0;
     padding: 0;
     list-style: none;
-    display: flex;
-    gap: 1.5rem;
 }
+/* --- END NEW --- */
 
 header nav a {
     text-decoration: none;
@@ -34,13 +43,37 @@ header nav a {
     font-weight: 500;
     padding: 0.5rem 0;
     border-bottom: 2px solid transparent;
-    transition: color 0.3s, border-color 0.3s;
+    transition: color 0.3s, border-color 0.3s, background-color 0.3s, padding 0.3s, border-radius 0.3s;
 }
 
 header nav a:hover, header nav a.active {
     color: #007bff;
     border-bottom-color: #007bff;
 }
+
+/* --- NEW: User Greeting and Logout Button Styles --- */
+#user-greeting {
+    font-weight: 500;
+    color: #333;
+}
+
+.logout-button {
+    background-color: #ffebee; /* Light red background */
+    color: #c62828; /* Darker red text */
+    padding: 0.5rem 1rem;
+    border-radius: 20px; /* Pill shape */
+    font-weight: 500;
+    border-bottom: none !important; /* Override other border styles */
+    text-align: center;
+}
+
+.logout-button:hover {
+    background-color: #ffcdd2; /* Slightly darker red on hover */
+    color: #b71c1c !important; /* Ensure text color stays on hover */
+    border-bottom: none !important;
+}
+/* --- END NEW --- */
+
 
 /* Main Content */
 main {
@@ -226,7 +259,7 @@ legend {
     gap: 0.5rem;
 }
 
-.view-button, .edit-button, .delete-button {
+.view-button, .edit-button, .inactive-button {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
@@ -236,7 +269,7 @@ legend {
 
 .view-button { background-color: #17a2b8; }
 .edit-button { background-color: #ffc107; color: #212529;}
-.delete-button { background-color: #dc3545; }
+.inactive-button { background-color: #fd7e14; }
 
 /* --- Vendas Section --- */
 .vendas-layout {
@@ -364,12 +397,20 @@ legend {
     margin-right: 1rem;
 }
 
-.summary-item input {
+.summary-item input,
+.summary-item select {
     width: 100px;
     padding: 0.5rem;
     text-align: right;
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+/* Specific styling for the customer name input */
+#venda-nome-cliente {
+    flex-grow: 1; /* Allows the input to grow and take available space */
+    width: auto; /* Overrides the fixed width */
+    text-align: left;
 }
 
 .suggestion-container {
@@ -515,6 +556,23 @@ legend {
     header {
         padding: 1rem;
     }
+
+    /* --- NEW: Adjust user info for mobile --- */
+    .nav-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main-menu {
+        order: 2; /* Move menu below user info */
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .user-info {
+        order: 1; /* Move user info above menu */
+    }
+    /* --- END NEW --- */
 
     header nav ul {
         flex-direction: column;

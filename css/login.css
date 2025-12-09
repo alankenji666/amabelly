@@ -1,0 +1,120 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f4f7f6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Needed for the pseudo-element */
+    overflow: hidden; /* Hide anything that might spill */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/imagens/Logo_Amabelly_Sem_Rede.svg'); /* CORRECTED PATH */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 60%; /* A large, but not overwhelming size */
+    opacity: 0.05; /* Make it very subtle, like a watermark */
+    filter: blur(1px); /* Optional: softens the background logo */
+    z-index: -1; /* Critical: places it behind the content */
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    text-align: center;
+    position: relative; /* Ensures it sits above the pseudo-element */
+    z-index: 1;
+}
+
+h1 {
+    margin-bottom: 24px;
+    color: #333;
+    font-size: 24px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.form-group-remember {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group-remember input {
+    margin-right: 8px;
+}
+
+.form-group-remember label {
+    color: #555;
+    font-size: 14px;
+}
+
+.cta-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+.feedback-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    display: none;
+}
+
+.feedback-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    display: block;
+}
+
+.feedback-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    display: block;
+}

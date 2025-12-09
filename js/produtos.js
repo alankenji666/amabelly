@@ -29,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderProdutos(produtos) {
         if (!produtosGrid || !buscaInput) return;
         const searchTerm = buscaInput.value.toLowerCase();
-        const produtosFiltrados = produtos.filter(p =>
+        
+        const produtosAtivos = produtos.filter(p => p.ativo === 'Sim');
+
+        const produtosFiltrados = produtosAtivos.filter(p =>
             (p.codigo && p.codigo.toLowerCase().includes(searchTerm)) ||
             (p.descricao && p.descricao.toLowerCase().includes(searchTerm))
         );
@@ -53,12 +56,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="product-actions">
                     <button class="view-button">Visualizar</button>
                     <button class="edit-button">Editar</button>
-                    <button class="delete-button">Excluir</button>
+                    <button class="inactive-button">Inativar</button>
                 </div>
             `;
             card.querySelector('.view-button').addEventListener('click', () => openViewModal(produto));
             card.querySelector('.edit-button').addEventListener('click', () => openEditModal(produto));
-            card.querySelector('.delete-button').addEventListener('click', () => handleDeleteProduct(produto));
+            card.querySelector('.inactive-button').addEventListener('click', () => handleInactivateProduct(produto));
             produtosGrid.appendChild(card);
         });
     }
@@ -66,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function openViewModal(produto) {
         if (!viewModal) return;
 
-        // Popula campos de texto/número
         for (const key in produto) {
             const field = document.getElementById(`view-${key}`);
             if (field) {
@@ -75,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Lógica para exibir imagem ou placeholder
         const viewImage = document.getElementById('view-imagem1-display');
         const viewImagePlaceholder = document.getElementById('view-image-placeholder');
         if (produto.imagem1) {
@@ -234,23 +235,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    async function handleDeleteProduct(produto) {
-        if (!confirm(`Confirma a exclusão do produto "${produto.descricao}" (Linha ${produto.linha})?`)) return;
+    // **CORREÇÃO: Lógica de inativação ajustada para usar DELETE e o código do produto**
+    async function handleInactivateProduct(produto) {
+        if (!confirm(`Confirma a inativação do produto "${produto.descricao}" (${produto.codigo})?`)) return;
 
         try {
             const response = await fetch('https://project-445845663010.southamerica-east1.run.app/produtos', {
-                method: 'DELETE',
+                method: 'DELETE', // Método DELETE
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ linha: produto.linha })
+                body: JSON.stringify({ codigo: produto.codigo }) // Envia o código do produto
             });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message || 'Falha ao excluir.');
 
-            alert('Produto excluído com sucesso!');
-            fetchAndRenderProdutos();
+            const result = await response.json();
+
+            if (result.erro || !response.ok) {
+                throw new Error(result.erro || result.message || 'Falha ao inativar.');
+            }
+
+            alert(result.mensagem || 'Produto inativado com sucesso!');
+            fetchAndRenderProdutos(); // Re-renderiza a lista para remover o produto inativo
 
         } catch (error) {
-            alert(`Erro ao excluir o produto: ${error.message}`);
+            alert(`Erro ao inativar o produto: ${error.message}`);
         }
     }
 

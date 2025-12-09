@@ -4,18 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestão de Estoque</title>
+    
+    <!-- Roteiro de Guarda: Redireciona se não estiver logado -->
+    <script src="js/guard.js"></script>
+
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Oculta o corpo por padrão para evitar o flash de conteúdo não autenticado */
+        body {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-            <ul>
-                <li><a href="#" id="menu-dashboard" class="active">Dashboard</a></li>
-                <li><a href="#" id="menu-produtos">Produtos</a></li>
-                <li><a href="#" id="menu-vendas">Vendas</a></li>
-                <li><a href="#" id="menu-compras">Compras</a></li>
-                <li><a href="https://amabelly-ouqw.vercel.app/" target="_blank">Catálogo</a></li>
-            </ul>
+            <!-- Div para separar menu e info do usuário -->
+            <div class="nav-container">
+                <ul class="main-menu">
+                    <li><a href="#" id="menu-dashboard" class="active">Dashboard</a></li>
+                    <li><a href="#" id="menu-produtos">Produtos</a></li>
+                    <li><a href="#" id="menu-vendas">Vendas</a></li>
+                    <li><a href="#" id="menu-compras">Compras</a></li>
+                    <li><a href="https://www.amabellysemijoias.com.br/" target="_blank">Catálogo</a></li>
+                </ul>
+                <div id="user-info" class="user-info">
+                    <span id="user-greeting"></span>
+                    <a href="#" id="menu-logout" class="logout-button">Sair</a>
+                </div>
+            </div>
         </nav>
     </header>
 
@@ -70,6 +87,21 @@
                     <h2>Sacola de Vendas</h2>
                     <div id="vendas-sacola-lista"></div>
                     <div class="vendas-sacola-summary">
+                        <!-- NOVOS CAMPOS ADICIONADOS AQUI -->
+                        <div class="summary-item">
+                            <label for="venda-nome-cliente">Nome do Cliente:</label>
+                            <input type="text" id="venda-nome-cliente" placeholder="Nome do cliente">
+                        </div>
+                        <div class="summary-item">
+                            <label for="venda-forma-pagamento">Forma de Pagamento:</label>
+                            <select id="venda-forma-pagamento">
+                                <option>PIX</option>
+                                <option>Cartão de Crédito</option>
+                                <option>Débito</option>
+                                <option>Dinheiro</option>
+                            </select>
+                        </div>
+                        <!-- FIM DOS NOVOS CAMPOS -->
                         <div class="summary-item">
                             <label for="venda-frete">Frete (R$):</label>
                             <input type="text" inputmode="decimal" id="venda-frete" value="0,00">
@@ -283,7 +315,12 @@
         </div>
     </div>
 
-
+    <script>
+        // Se o guardião permitir a execução, exibe o corpo.
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.display = 'block';
+        });
+    </script>
     <script src="js/main.js"></script>
     <script src="js/compras.js"></script>
     <script src="js/produtos.js"></script>

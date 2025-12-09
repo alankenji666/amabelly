@@ -19,9 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Assumindo que a API retorna somente produtos ativos.
-            // Se houver um campo como `ativo`, o filtro pode ser reativado aqui.
-            const produtosAtivos = produtos; // produtos.filter(p => p.ativo);
+            // **MODIFICAÇÃO: Filtra para exibir apenas produtos com status "Sim"**
+            const produtosAtivos = produtos.filter(p => p.ativo === 'Sim');
             catalogoGrid.innerHTML = '';
 
             produtosAtivos.forEach(produto => {

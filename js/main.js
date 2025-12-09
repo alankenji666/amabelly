@@ -1,4 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- USER GREETING ---
+    const userGreeting = document.getElementById('user-greeting');
+    try {
+        const userDataString = sessionStorage.getItem('userData');
+        if (userDataString) {
+            const userData = JSON.parse(userDataString);
+            
+            // CORREÇÃO: Usando a propriedade 'usuario' em vez de 'apelido'
+            if (userData && userData.usuario) {
+                // Transforma a primeira letra em maiúscula para um toque final
+                const displayName = userData.usuario.charAt(0).toUpperCase() + userData.usuario.slice(1);
+                userGreeting.textContent = `Olá, ${displayName}`;
+            }
+        }
+    } catch (e) {
+        console.error("Erro ao processar dados do usuário:", e);
+        userGreeting.textContent = 'Olá!';
+    }
+
     const menuLinks = {
         'menu-dashboard': 'dashboard-section',
         'menu-produtos': 'produtos-section',
@@ -8,20 +27,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const mainContent = document.getElementById('main-content');
     const sections = mainContent.children;
-    const navLinks = document.querySelectorAll('header nav a');
+    const navLinks = document.querySelectorAll('.main-menu a'); // Atualizado para o novo seletor
+    const logoutButton = document.getElementById('menu-logout');
 
     function switchTab(targetId) {
-        // Hide the currently visible section, if it's not the target
         for (let section of sections) {
             if (!section.classList.contains('hidden') && section.id !== targetId) {
                 section.classList.add('hidden');
             }
         }
 
-        // Deactivate all nav links
         navLinks.forEach(link => link.classList.remove('active'));
 
-        // Show the target section and activate the corresponding link
         const targetSection = document.getElementById(targetId);
         const targetLink = document.getElementById(Object.keys(menuLinks).find(key => menuLinks[key] === targetId));
 
@@ -33,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add click event listeners to all nav links
     Object.keys(menuLinks).forEach(linkId => {
         const link = document.getElementById(linkId);
         if (link) {
@@ -43,6 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 switchTab(targetSectionId);
             });
         }
+    });
+
+    // --- LOGOUT LOGIC ---
+    logoutButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('userData');
+        window.location.href = 'login.html';
     });
 
     // Set the initial active tab (e.g., Dashboard)
